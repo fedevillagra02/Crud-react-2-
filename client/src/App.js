@@ -7,6 +7,7 @@ import Swal from 'sweetalert2'
 
 
 
+
 function App() {
 
   const[nombre,setnombre]=useState("");
@@ -16,6 +17,7 @@ function App() {
   const[anios,setanios]=useState();
   const[editar,seteditar]=useState(false);
   const[id,setid]=useState();
+  
 
 
 
@@ -40,6 +42,28 @@ const [empleadosList,setEmpleados]= useState([]);
     });
 
   }
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   
   const update = ()=>{
     Axios.put("http://localhost:3001/update",{
@@ -71,7 +95,9 @@ const [empleadosList,setEmpleados]= useState([]);
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si,eliminarlo!'
+      confirmButtonText: 'Si,eliminarlo!',
+      cancelButtonText: 'Cancelar'
+
     }).then((result) => {
       if (result.isConfirmed) {Axios.delete(`http://localhost:3001/delete/+${val.id}`).then(()=>{
         getEmpleados();
@@ -143,6 +169,9 @@ setid(val.id);
 
 
 
+
+
+
   return (
     <div className="container">
 
@@ -160,6 +189,30 @@ setid(val.id);
         }
         className="form-control" value={nombre}     placeholder="Ingrese un nombre" aria-label="Username" aria-describedby="basic-addon1"/>
      </div>
+    
+    
+    
+    
+    
+      
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       
       <div className="input-group mb-3">
   <span className="input-group-text" id="basic-addon1">Edad</span>

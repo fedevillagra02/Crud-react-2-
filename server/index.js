@@ -1,5 +1,4 @@
 
-
 const express = require("express");
 const app=express();
 const mysql= require("mysql");
@@ -106,5 +105,37 @@ app.delete("/delete/:id",(req,res)=>{
 
 
 
+app.post("/register",(req,res)=>{ 
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
+    
+    
+
+    db.query("INSERT INTO registro (username,email,password) VALUES(?,?,?)" ,
+    [username,email,password],
+    (err,result)=>{
+        if(err){
+            console.log(err);
+
+        }else{
+           
+
+            res.send(result);
+        }
+        
+            
+        }
+    
+    );    
+    
+});
+
+
+
 
 app.listen(3001,()=>{console.log("Corriendo en el puerto 3001")}); 
+
+
+
+
