@@ -1,8 +1,10 @@
-
 const express = require("express");
 const app=express();
 const mysql= require("mysql");
 const cors = require("cors");
+const generarToken = require("./auth");
+const bcrypt = require('bcrypt');
+
 app.use(cors());
 app.use(express.json());
 const db=mysql.createConnection({
@@ -105,33 +107,71 @@ app.delete("/delete/:id",(req,res)=>{
 
 
 
-app.post("/register",(req,res)=>{ 
+app.post("/register", async (req, res) => {
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
-    
-    
 
-    db.query("INSERT INTO registro (username,email,password) VALUES(?,?,?)" ,
-    [username,email,password],
-    (err,result)=>{
-        if(err){
-            console.log(err);
+    try {
+        // Generar el hash de la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        }else{
-           
-
-            res.send(result);
-        }
-        
-            
-        }
-    
-    );    
-    
+        // Realizar la inserción en la base de datos utilizando el hash de la contraseña
+        db.query("INSERT INTO registro (username, email, password) VALUES (?, ?, ?)",
+            [username, email, hashedPassword],
+            (err, result) => {
+                if (err) {
+                    console.error(err);
+                    res.status(500).send({ message: "Error al registrar el usuario" });
+                } else {
+                    res.status(200).send({ message: "Usuario registrado exitosamente" });
+                }
+            }
+        );
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "Error al registrar el usuario" });
+    }
 });
 
+app.post("/login", (req, res) => {
+    const email= req.body.email; //datos que recibo desde el front
+    const password = req.body.password;
+ 
+    db.query('SELECT * FROM registro WHERE email = ?'
+[email],
+async(err,result)=>{
+    if(err){
+        console.log(err);
+    }else{
+        if(result.length>0 ){
+            const datos=result[0]
+            const hashedPassword=datos.password;
+            const esigual= await bcrypt.compare(password,hashedPassword);
+            if(esigual){
+                const token=generarToken(datos);
+                console.log("Credenciales correctos");
+                res.send({message:"inicio exitoso",token});
+            }else{
+                console.log("Credenciales incorrectoss ");
+                res.send({message:"contraseña incorrecta"});
+            }
+        }else{
+            res.send({ message: "usuario no existe"});
+          console.log("usuario no encontrado");
 
+        }
+    }
+}
+    )
+
+
+
+} 
+  );
+
+
+    
 
 
 app.listen(3001,()=>{console.log("Corriendo en el puerto 3001")}); 
