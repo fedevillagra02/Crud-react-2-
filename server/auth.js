@@ -11,10 +11,11 @@ function generarToken(usuario) {
   };
 
   const token = jwt.sign(payload, secret, {
-    expiresIn: '5m',
+    expiresIn: '1s',
   });
 
   return token;
 }
 
 module.exports = generarToken;
+

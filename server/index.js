@@ -13,12 +13,29 @@ const db=mysql.createConnection({
     password:"",
     database:"empleados_crud"
 });
+
+
 app.post("/create",(req,res)=>{
+   
+    const token = req.headers.authorization;
     const nombre = req.body.nombre;
     const edad = req.body.edad;
     const pais = req.body.pais;
     const cargo = req.body.cargo;
     const anios = req.body.anios;
+    if (!token) { // verifico si el token está incluido en la cabecera de la solicitud
+        return console.log('Token no proporcionado'); //si no lo está imprime en consola
+      }
+    
+      jwt.verify(token, 'clav3s3cr3ta', (err, decoded) => {
+        if (err) {
+          if (err.name === 'TokenExpiredError') {
+            return res.json({ msj: 'Token expirado, reinicia sesión' });
+          } else {
+            return res.json({ msj: 'Token inválido' });
+          }
+        }
+        })
 
     db.query("INSERT INTO empleados(nombre,edad,pais,cargo,anios) VALUES(?,?,?,?,?)" ,
     [nombre,edad,pais,cargo,anios],
@@ -138,8 +155,7 @@ app.post("/login", (req, res) => {
     const email= req.body.email; //datos que recibo desde el front
     const password = req.body.password;
  
-    db.query('SELECT * FROM registro WHERE email = ?'
-[email],
+    db.query("SELECT * FROM registro WHERE email = ? ",[email],
 async(err,result)=>{
     if(err){
         console.log(err);
@@ -150,10 +166,10 @@ async(err,result)=>{
             const esigual= await bcrypt.compare(password,hashedPassword);
             if(esigual){
                 const token=generarToken(datos);
-                console.log("Credenciales correctos");
-                res.send({message:"inicio exitoso",token});
+                console.log("Credenciales correctos",token);
+                res.send({message:"Inicio exitoso",token,datos: JSON.stringify(datos)});
             }else{
-                console.log("Credenciales incorrectoss ");
+                console.log("Credenciales incorrectos ");
                 res.send({message:"contraseña incorrecta"});
             }
         }else{

@@ -1,5 +1,5 @@
 
-import './App.css';
+import './estilos/App.css';
 import{useState} from "react";
 import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -17,31 +17,38 @@ function App() {
   const[anios,setanios]=useState();
   const[editar,seteditar]=useState(false);
   const[id,setid]=useState();
-  
+
 
 
 
 const [empleadosList,setEmpleados]= useState([]);
 
-  const add = ()=>{
-    Axios.post("http://localhost:3001/create",{
-      nombre:nombre,
-      edad:edad,
-      pais:pais,
-      cargo:cargo,
-      anios:anios
-    }).then(()=>{
-      getEmpleados();
-      limpiarCampos();
-      Swal.fire({
-        title: "<strong> Registro exitoso</strong>",
-        html:"<i>El empleado  <strong> " +  [nombre] + " </strong> fue registrado con exito </i>",
-        icon: 'success',
-        timer:3000
-      })
-    });
+const add = () => {
+  const token = 'clav3s3cr3ta'; // Aquí deberías tener el valor real de tu token
 
-  }
+  Axios.post("http://localhost:3001/create", {
+    nombre: nombre,
+    edad: edad,
+    pais: pais,
+    cargo: cargo,
+    anios: anios
+  }, {
+    headers: {
+      Authorization: `Bearer ${token}` // Agrega el token al encabezado de autorización
+    }
+  }).then(() => {
+    getEmpleados();
+    limpiarCampos();
+
+    Swal.fire({
+      title: "<strong> Registro exitoso</strong>",
+      html: "<i>El empleado <strong>" + [nombre] + "</strong> fue registrado con éxito</i>",
+      icon: 'success',
+      timer: 3000
+    });
+  });
+};
+
 
  
 
