@@ -18,13 +18,10 @@ function App() {
   const[editar,seteditar]=useState(false);
   const[id,setid]=useState();
 
-
-
-
 const [empleadosList,setEmpleados]= useState([]);
 
 const add = () => {
-  const token = 'clav3s3cr3ta'; // Aquí deberías tener el valor real de tu token
+  const token = localStorage.getItem('token')
 
   Axios.post("http://localhost:3001/create", {
     nombre: nombre,
@@ -32,11 +29,12 @@ const add = () => {
     pais: pais,
     cargo: cargo,
     anios: anios
-  }, {
+  },  {
     headers: {
-      Authorization: `Bearer ${token}` // Agrega el token al encabezado de autorización
+      'Authorization': `Bearer ${token}`
     }
-  }).then(() => {
+}
+  ).then(() => {
     getEmpleados();
     limpiarCampos();
 

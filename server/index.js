@@ -4,9 +4,12 @@ const mysql= require("mysql");
 const cors = require("cors");
 const generarToken = require("./auth");
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+var bodyParser = require('body-parser')
 
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json())
+
 const db=mysql.createConnection({
     host:"localhost",
     user:"root",
@@ -15,44 +18,44 @@ const db=mysql.createConnection({
 });
 
 
-app.post("/create",(req,res)=>{
-   
+app.post("/create", (req, res) => {
     const token = req.headers.authorization;
+    console.log(req.headers.authorization); //recibo token desde la cabecera enviado desde el cliente
     const nombre = req.body.nombre;
     const edad = req.body.edad;
     const pais = req.body.pais;
     const cargo = req.body.cargo;
     const anios = req.body.anios;
-    if (!token) { // verifico si el token está incluido en la cabecera de la solicitud
-        return console.log('Token no proporcionado'); //si no lo está imprime en consola
+  
+    if (!token) {
+      return res.status(401).json({ message: 'Token no proporcionado' });
+    }
+  
+    jwt.verify(token, 'clav3s3cr3ta', (err, decoded) => {
+      if (err) {
+        if (err.name === 'TokenExpiredError') {
+          return res.status(401).json({ message: 'Token expirado, reinicia sesión' });
+          
+        } else {
+          return res.status(401).json({ message: 'Token inválido' });
+        }
       }
-    
-      jwt.verify(token, 'clav3s3cr3ta', (err, decoded) => {
-        if (err) {
-          if (err.name === 'TokenExpiredError') {
-            return res.json({ msj: 'Token expirado, reinicia sesión' });
-          } else {
-            return res.json({ msj: 'Token inválido' });
+  
+      // Si el token es válido, se procede con la inserción en la base de datos
+      db.query("INSERT INTO empleados(nombre, edad, pais, cargo, anios) VALUES (?, ?, ?, ?, ?)",
+        [nombre, edad, pais, cargo, anios],
+        (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Error al insertar en la base de datos' });
           }
+  
+          res.status(200).json({ message: 'Datos insertados correctamente', result });
         }
-        })
-
-    db.query("INSERT INTO empleados(nombre,edad,pais,cargo,anios) VALUES(?,?,?,?,?)" ,
-    [nombre,edad,pais,cargo,anios],
-    (err,result)=>{
-        if(err){
-            console.log(err);
-
-        }else{
-            res.send(result);
-        }
-        
-            
-        }
-    
-    );    
-    
-});
+      );
+    });
+  });
+  
 
 app.get("/empleados",(req,res)=>{
     
@@ -186,7 +189,17 @@ async(err,result)=>{
 } 
   );
 
+//app.use((err,req,res,next)=>{
+ 
+//if(err.name==='UnauthorizedError'){
+ 
+//return res.status(401).json({Error:"El token no es valido o ya no existe"})
+  //}
+   // console.error('Error global:' , err);
+   
+//res.status(500).json({error:'Error interno del servidor'})
 
+//});
     
 
 
