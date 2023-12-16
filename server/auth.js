@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const secret = process.env.secret || 'clav3s3cr3ta'; // Se utiliza la variable de entorno o una clave por defecto
+const secret = process.env.secret || 'fede'; // Se utiliza la variable de entorno o una clave por defecto
 
 // Función para generar el token JWT
 function generarToken(usuario) {
@@ -11,7 +11,8 @@ function generarToken(usuario) {
   };
 
   const token = jwt.sign(payload, secret, {
-    expiresIn: '10h',
+    expiresIn: '10m',
+    algorithm:'HS256'
   });
 
   return token;

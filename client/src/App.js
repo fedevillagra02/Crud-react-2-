@@ -19,19 +19,44 @@ function App() {
   const[id,setid]=useState();
 
 const [empleadosList,setEmpleados]= useState([]);
+const token = localStorage.getItem('token');
 
 const add = () => {
-  const token = localStorage.getItem('token')
+   // Verificar si los campos obligatorios están completos
+   if (!nombre || !edad || !pais || !cargo || !anios) {
+    // Mostrar mensaje de error o manejar la falta de campos obligatorios
+    // Por ejemplo:
+    alert('Por favor, complete todos los campos obligatorios.');
+    return;
+  }
 
+  // Validar el formato de la edad (asegurarse de que sea un número)
+  const parsedAge = parseInt(edad);
+  if (isNaN(parsedAge) || parsedAge <= 0) {
+    // Mostrar mensaje de error o manejar el formato incorrecto de la edad
+    // Por ejemplo:
+    alert('Por favor, ingrese una edad válida.');
+    return;
+  }
+
+  // Validar el formato de 'anios' (asegurarse de que sea un número)
+  const parsedAnios = parseInt(anios);
+  if (isNaN(parsedAnios) || parsedAnios <= 0) {
+    // Mostrar mensaje de error o manejar el formato incorrecto de 'anios'
+    // Por ejemplo:
+    alert('Por favor, ingrese una cantidad válida de años.');
+    return;
+  }
   Axios.post("http://localhost:3001/create", {
     nombre: nombre,
     edad: edad,
     pais: pais,
     cargo: cargo,
-    anios: anios
-  },  {
+    anios: anios,
+    id:id
+  },  { 
     headers: {
-      'Authorization': `Bearer ${token}`
+      'Authorization': `Bearer ${token}` 
     }
 }
   ).then(() => {
@@ -46,31 +71,33 @@ const add = () => {
     });
   });
 };
-
-
  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
   const update = ()=>{
+     // Verificar si los campos obligatorios están completos
+  if (!nombre || !edad || !pais || !cargo || !anios) {
+    // Mostrar mensaje de error o manejar la falta de campos obligatorios
+    // Por ejemplo:
+    alert('Por favor, complete todos los campos obligatorios.');
+    return;
+  }
+
+  // Validar el formato de la edad (asegurarse de que sea un número)
+  const parsedAge = parseInt(edad);
+  if (isNaN(parsedAge) || parsedAge <= 0) {
+    // Mostrar mensaje de error o manejar el formato incorrecto de la edad
+    // Por ejemplo:
+    alert('Por favor, ingrese una edad válida.');
+    return;
+  }
+
+  // Validar el formato de 'anios' (asegurarse de que sea un número)
+  const parsedAnios = parseInt(anios);
+  if (isNaN(parsedAnios) || parsedAnios <= 0) {
+    // Mostrar mensaje de error o manejar el formato incorrecto de 'anios'
+    // Por ejemplo:
+    alert('Por favor, ingrese una cantidad válida de años.');
+    return;
+  }
     Axios.put("http://localhost:3001/update",{
     id:id,  
     nombre:nombre,
@@ -78,12 +105,17 @@ const add = () => {
       pais:pais,
       cargo:cargo,
       anios:anios
-    }).then(()=>{
+    },{ 
+      headers: {
+        'Authorization': `Bearer ${token}` 
+      }
+  }
+    ).then(()=>{
       getEmpleados();
       limpiarCampos();
       Swal.fire({
         title: "<strong> Actualizacion exitosa!!</strong>",
-        html:"<i>El empleado  <strong> " +  [nombre] + " </strong> fue actualizado con exito con exito!!</i>",
+        html:`<i>El empleado <strong>${nombre}</strong> fue actualizado con éxito!!</i>`,
         icon: 'success',
         timer:3000
       })
@@ -103,8 +135,13 @@ const add = () => {
       confirmButtonText: 'Si,eliminarlo!',
       cancelButtonText: 'Cancelar'
 
-    }).then((result) => {
-      if (result.isConfirmed) {Axios.delete(`http://localhost:3001/delete/+${val.id}`).then(()=>{
+    },{ 
+      headers: {
+        'Authorization': `Bearer ${token}` 
+      }
+  }
+    ).then((result) => {
+      if (result.isConfirmed) {Axios.delete(`http://localhost:3001/delete/${val.id}`).then(()=>{
         getEmpleados();
         limpiarCampos();
         Swal.fire({
@@ -123,11 +160,6 @@ const add = () => {
     }) 
     
   }
-
-
-
-
-
 
   const limpiarCampos = ()=>{
     setanios("");
@@ -165,18 +197,6 @@ setid(val.id);
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
   return (
     <div className="container">
 
@@ -195,30 +215,6 @@ setid(val.id);
         className="form-control" value={nombre}     placeholder="Ingrese un nombre" aria-label="Username" aria-describedby="basic-addon1"/>
      </div>
     
-    
-    
-    
-    
-      
-     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
       <div className="input-group mb-3">
   <span className="input-group-text" id="basic-addon1">Edad</span>
   <input type="text" 
@@ -310,14 +306,10 @@ setid(val.id);
         </td> 
 
     </tr>
-    
-    
-   
+  
   })
 }
 
-    
-    
   </tbody>
 </table>
 

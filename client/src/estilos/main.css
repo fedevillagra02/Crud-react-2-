@@ -32,8 +32,9 @@
     transition: background-color 0.3s ease;
   }
   
-  .btn2:hover {
-    background-color: #0056b3;
+  
+  #btn2:hover {
+    background-color:  #005bbd;
   }
   
   

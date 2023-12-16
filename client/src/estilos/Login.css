@@ -6,12 +6,13 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
     background-color: #fff; /* Agregar un fondo blanco */
   }
   
   /* Estilos para los campos de entrada */
-  #input[type="text"],
-  #input[type="password"] {
+
+  #input {
     width: calc(300px - 20px); /* Considerar el padding para mantener el ancho adecuado */
     margin-bottom: 50px;
     padding: 10px;
@@ -19,10 +20,12 @@
     border: 1px solid #ccc;
     box-sizing: border-box;
     transition: border-color 0.3s ease; /* Agregar transición para el cambio de color del borde */
+  
   }
   
   #input[type="text"]:focus,
   #input[type="password"]:focus {
+   
     border-color: #00a2ff; /* Cambiar el color del borde al enfocar el campo */
   }
   
@@ -31,34 +34,27 @@
     width: 280px;
     padding: 10px;
     border-radius: 4px;
-    border: none;
-    background-color: #00a2ff;
+    border: none;                 
+    background-color:  #00a2ff;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease; /* Agregar transición al color de fondo */
+    border-radius: 6px;
+    
   }
   
   #btn1:hover {
-    background-color: #0056b3;
+    background-color:  #005bbd;
   }
   
-  /* Estilos para mensajes de error u otros mensajes */
-  .error-message {
-    color: #ff0000; /* Color rojo para mensajes de error */
-    margin-bottom: 15px;
-    font-size: 14px;
-  }
   
-  /* Otros estilos según sea necesario */
-  /* ... */
   /* Estilos para el título "Login" */
-  .h1 {
-    text-align: center; /* Centrar el texto */
+  #h1 {
+    text-align: left; /* Centrar el texto */
     margin-bottom: 20px; /* Espacio hacia abajo después del título */
     color: #333; /* Color del texto */
   }
   
-  /* Resto de tus estilos */
-  /* ... */
+  
 
   

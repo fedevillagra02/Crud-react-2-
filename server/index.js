@@ -5,10 +5,9 @@ const cors = require("cors");
 const generarToken = require("./auth");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-var bodyParser = require('body-parser')
 
 app.use(cors());
-app.use(bodyParser.json())
+app.use(express.json());
 
 const db=mysql.createConnection({
     host:"localhost",
@@ -19,7 +18,7 @@ const db=mysql.createConnection({
 
 
 app.post("/create", (req, res) => {
-    const token = req.headers.authorization;
+    const token = req.headers.authorization.split(' ')[1];
     console.log(req.headers.authorization); //recibo token desde la cabecera enviado desde el cliente
     const nombre = req.body.nombre;
     const edad = req.body.edad;
@@ -31,7 +30,7 @@ app.post("/create", (req, res) => {
       return res.status(401).json({ message: 'Token no proporcionado' });
     }
   
-    jwt.verify(token, 'clav3s3cr3ta', (err, decoded) => {
+    jwt.verify(token, 'fede', (err, decoded) => {
       if (err) {
         if (err.name === 'TokenExpiredError') {
           return res.status(401).json({ message: 'Token expirado, reinicia sesión' });
@@ -81,13 +80,29 @@ app.get("/empleados",(req,res)=>{
     
 });
 app.put("/update",(req,res)=>{
+    const token = req.headers.authorization.split(' ')[1];
+    console.log(req.headers.authorization); //recibo token desde la cabecera enviado desde el cliente
     const id = req.body.id;
     const nombre = req.body.nombre;
     const edad = req.body.edad;
     const pais = req.body.pais;
     const cargo = req.body.cargo;
     const anios = req.body.anios;
-
+    
+    if (!token) {
+        return res.status(401).json({ message: 'Token no proporcionado' });
+      }
+    
+      jwt.verify(token, 'fede', (err, decoded) => {
+        if (err) {
+          if (err.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: 'Token expirado, reinicia sesión' });
+            
+          } else {
+            return res.status(401).json({ message: 'Token inválido' });
+          }
+        }
+     
     db.query("UPDATE empleados SET nombre=?,edad=?,pais=?,cargo=?,anios=? WHERE id=? ", [nombre,edad,pais,cargo,anios,id],
     (err,result)=>{
         if(err){
@@ -103,10 +118,25 @@ app.put("/update",(req,res)=>{
     );    
     
 });
+ });
 app.delete("/delete/:id",(req,res)=>{
     const id = req.params.id;
+    const token = req.headers.authorization.split(' ')[1];
+    console.log(req.headers.authorization); //recibo token desde la cabecera enviado desde el cliente
+    if (!token) {
+        return res.status(401).json({ message: 'Token no proporcionado' });
+      }
     
-
+      jwt.verify(token, 'fede', (err, decoded) => {
+        if (err) {
+          if (err.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: 'Token expirado, reinicia sesión' });
+            
+          } else {
+            return res.status(401).json({ message: 'Token inválido' });
+          }
+        }
+         });
     db.query("DELETE FROM empleados  WHERE id=? ", [id],
     (err,result)=>{
         if(err){

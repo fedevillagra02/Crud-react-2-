@@ -33,7 +33,7 @@ export default function IniciarSesion() {
 
   return (
     <div id="login-container"> 
-    <h1>Iniciar Sesion</h1>
+    <h1 id='h1'>Iniciar Sesion</h1>
       <input id="input" type="text" placeholder="Correo electrónico" onChange={(event) => setEmail(event.target.value)} />
       <input  id="input"type="password" placeholder="Contraseña" onChange={(event) => setPassword(event.target.value)} />
       <button id="btn1"onClick={iniciarSesion}>Iniciar sesión</button>
