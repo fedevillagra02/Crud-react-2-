@@ -146,8 +146,8 @@ const add = () => {
           limpiarCampos();
           Swal.fire({
             title: 'Eliminado!',
-             html:  "<strong>" +  val.nombre +  "</strong>" + " fue eliminado.",
-             icon:'success',
+            html :`<strong>${val.nombre}</strong> fue eliminado.`,
+            icon:'success',
               timer:3000
            });
         })
@@ -172,7 +172,12 @@ seteditar(false);
 
 
   const getEmpleados =()=>{
-    Axios.get("http://localhost:3001/empleados"
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${token}` // Usando Bearer authentication para enviar el token
+      }
+    };
+    Axios.get("http://localhost:3001/empleados",config
    ).then((response)=>{
   setEmpleados(response.data);
     });

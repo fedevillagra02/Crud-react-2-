@@ -54,30 +54,41 @@ app.post("/create", (req, res) => {
     });
   });
   
-
-app.get("/empleados",(req,res)=>{
+  app.get("/empleados",(req,res)=>{
+    const token = req.headers.authorization.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ message: 'Token no proporcionado' });
+      }
     
-
-    db.query("SELECT * FROM  empleados" ,
-   
-    (err,result)=>{
-        if(err){
-            console.log(err);
-
-        }else{
-            res.send(result);
-        }
-        
+      jwt.verify(token, 'fede', (err, decoded) => {
+        if (err) {
+          if (err.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: 'Token expirado, reinicia sesión' });
             
+          } else {
+            return res.status(401).json({ message: 'Token inválido' });
+          }
         }
+         });
+      db.query("SELECT * FROM  empleados" ,
+  
+      (err,result)=>{
+          if(err){
+              console.log(err);
+  
+          }else{
+              res.send(result);
+          } 
+        });
+      });
     
-    );    
+
 
 
 
 
     
-});
+
 app.put("/update",(req,res)=>{
     const token = req.headers.authorization.split(' ')[1];
     const id = req.body.id;
@@ -155,30 +166,47 @@ app.delete("/delete/:id",(req,res)=>{
 
 
 app.post("/register", async (req, res) => {
-    const username = req.body.username;
-    const email = req.body.email;
-    const password = req.body.password;
+  const username = req.body.username;
+  const email = req.body.email;
+  const password = req.body.password;
 
-    try {
-        // Generar el hash de la contraseña
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Realizar la inserción en la base de datos utilizando el hash de la contraseña
-        db.query("INSERT INTO registro (username, email, password) VALUES (?, ?, ?)",
-            [username, email, hashedPassword],
-            (err, result) => {
-                if (err) {
-                    console.error(err);
-                    res.status(500).send({ message: "Error al registrar el usuario" });
-                } else {
-                    res.status(200).send({ message: "Usuario registrado exitosamente" });
-                }
-            }
-        );
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: "Error al registrar el usuario" });
-    }
+  // Verificar si el usuario o el correo ya existen en la base de datos
+  db.query("SELECT * FROM registro WHERE username = ? OR email = ?", [username, email], (err, result) => {
+      if (err) {
+          console.error(err);
+          res.status(500).send({ message: "Error al verificar duplicados" });
+      } else {
+          if (result.length > 0) {
+              // Usuario o correo ya existen, enviar mensaje8
+              const userusado = result[0];
+              if (userusado.username === username) {
+                  res.status(400).send({ message: "El nombre de usuario ya está en uso" });
+              } else if (userusado.email === email) {
+                  res.status(400).send({ message: "El correo electrónico ya está en uso" });
+              }
+          } else {
+              // Usuario y correo no existen, proceder con el registro
+              bcrypt.hash(password, 10, (hashErr, hashedPassword) => {
+                  if (hashErr) {
+                      console.error(hashErr);
+                      res.status(500).send({ message: "Error al generar hash de contraseña" });
+                  } else {
+                      db.query("INSERT INTO registro (username, email, password) VALUES (?, ?, ?)",
+                          [username, email, hashedPassword],
+                          (insertErr, insertResult) => {
+                              if (insertErr) {
+                                  console.error(insertErr);
+                                  res.status(500).send({ message: "Error al registrar el usuario" });
+                              } else {
+                                  res.status(200).send({ message: "Usuario registrado exitosamente" });
+                              }
+                          }
+                      );
+                  }
+              });
+          }
+      }
+  });
 });
 
 app.post("/login", (req, res) => {

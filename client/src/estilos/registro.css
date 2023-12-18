@@ -12,7 +12,7 @@
   
   /* Estilos para los campos de entrada */
 
-  #input {
+  .input {
     width: calc(300px - 20px); /* Considerar el padding para mantener el ancho adecuado */
     margin-bottom: 50px;
     padding: 10px;
@@ -23,8 +23,8 @@
   
   }
   
-  #input[type="text"]:focus,
-  #input[type="password"]:focus {
+  .input[type="text"]:focus,
+  .input[type="password"]:focus {
    
     border-color: #00a2ff; /* Cambiar el color del borde al enfocar el campo */
   }
