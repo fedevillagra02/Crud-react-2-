@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Axios from "axios";
-import './estilos/Login.css';
+import './estilos/registro.css';
 import {useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
-function Login() {
+function Registro() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,8 +20,14 @@ function Login() {
       email: email,
       password: password,
     }).then(() => {
-      alert("Empleado registrado");
-      
+      localStorage.setItem('username', username);
+      Swal.fire({
+        title: "<strong> Registro exitoso</strong>",
+        html: "<i>El usuario <strong>" + [username] + "</strong> fue registrado con éxito</i>",
+        icon: 'success',
+        timer: 3000
+      }
+      )
       navigate(`/iniciar-sesion/`);
     });
     
@@ -50,7 +57,7 @@ function Login() {
 
 
 
-export default Login;
+export default Registro;
           
 
 

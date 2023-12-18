@@ -19,7 +19,6 @@ const db=mysql.createConnection({
 
 app.post("/create", (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
-    console.log(req.headers.authorization); //recibo token desde la cabecera enviado desde el cliente
     const nombre = req.body.nombre;
     const edad = req.body.edad;
     const pais = req.body.pais;
@@ -81,7 +80,6 @@ app.get("/empleados",(req,res)=>{
 });
 app.put("/update",(req,res)=>{
     const token = req.headers.authorization.split(' ')[1];
-    console.log(req.headers.authorization); //recibo token desde la cabecera enviado desde el cliente
     const id = req.body.id;
     const nombre = req.body.nombre;
     const edad = req.body.edad;
@@ -122,7 +120,6 @@ app.put("/update",(req,res)=>{
 app.delete("/delete/:id",(req,res)=>{
     const id = req.params.id;
     const token = req.headers.authorization.split(' ')[1];
-    console.log(req.headers.authorization); //recibo token desde la cabecera enviado desde el cliente
     if (!token) {
         return res.status(401).json({ message: 'Token no proporcionado' });
       }
@@ -219,18 +216,7 @@ async(err,result)=>{
 } 
   );
 
-//app.use((err,req,res,next)=>{
- 
-//if(err.name==='UnauthorizedError'){
- 
-//return res.status(401).json({Error:"El token no es valido o ya no existe"})
-  //}
-   // console.error('Error global:' , err);
-   
-//res.status(500).json({error:'Error interno del servidor'})
 
-//});
-    
 
 
 app.listen(3001,()=>{console.log("Corriendo en el puerto 3001")}); 

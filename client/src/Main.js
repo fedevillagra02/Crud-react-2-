@@ -12,7 +12,7 @@ function Main() {
           <Link to="/iniciar-sesion">
             <button id="btn2">Iniciar sesión</button>
           </Link>
-          <Link to="./Login">
+          <Link to="./registro">
             <button id="btn2">Registrarse</button>
           </Link>
         </div>

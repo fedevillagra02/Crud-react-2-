@@ -53,7 +53,6 @@ const add = () => {
     pais: pais,
     cargo: cargo,
     anios: anios,
-    id:id
   },  { 
     headers: {
       'Authorization': `Bearer ${token}` 
@@ -124,42 +123,39 @@ const add = () => {
   }
   
 
-  const deleteEmple = (val)=>{
+  const deleteEmple = (val) => {
     Swal.fire({
       title: 'Confirmar eliminado?',
-      html:"<i>Realmente desea eliminar a   <strong> " +  val.nombre + " </strong>?</i>",
+      html: "<i>Realmente desea eliminar a <strong>" + val.nombre + "</strong>?</i>",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si,eliminarlo!',
+      confirmButtonText: 'Si, eliminarlo!',
       cancelButtonText: 'Cancelar'
-
-    },{ 
-      headers: {
-        'Authorization': `Bearer ${token}` 
-      }
-  }
-    ).then((result) => {
-      if (result.isConfirmed) {Axios.delete(`http://localhost:3001/delete/${val.id}`).then(()=>{
-        getEmpleados();
-        limpiarCampos();
-        Swal.fire({
-         title: 'Eliminado!',
-          text:val.nombre+ " fue eliminado.",
-          icon:'success',
-            timer:3000
-        }
-          
-          
-        );
-
-      });                       
-       
-      }
-    }) 
-    
-  }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Axios.delete(`http://localhost:3001/delete/${val.id}`, {
+            
+            headers: {
+              'Authorization': `Bearer ${token}` // Agrega el encabezado 'Authorization'
+            }
+          }
+        ).then(() => {
+          getEmpleados();
+          limpiarCampos();
+          Swal.fire({
+            title: 'Eliminado!',
+             html:  "<strong>" +  val.nombre +  "</strong>" + " fue eliminado.",
+             icon:'success',
+              timer:3000
+           });
+        })
+       }  ;
+      
+    });
+  };
+  
 
   const limpiarCampos = ()=>{
     setanios("");
