@@ -1,59 +1,106 @@
 /* Estilos para el contenedor del formulario de inicio de sesión */
-#login-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    
-    background-color: #fff; /* Agregar un fondo blanco */
-  }
-  
-  /* Estilos para los campos de entrada */
+body{
+  background-color: white;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='1' y2='0'%3E%3Cstop offset='0' stop-color='%230FF'/%3E%3Cstop offset='1' stop-color='%23CF6'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23F00'/%3E%3Cstop offset='1' stop-color='%23FC0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='%23FFF' fill-opacity='0' stroke-miterlimit='10'%3E%3Cg stroke='url(%23a)' stroke-width='2'%3E%3Cpath transform='translate(0 0)' d='M1409 581 1450.35 511 1490 581z'/%3E%3Ccircle stroke-width='4' transform='rotate(0 800 450)' cx='500' cy='100' r='40'/%3E%3Cpath transform='translate(0 0)' d='M400.86 735.5h-83.73c0-23.12 18.74-41.87 41.87-41.87S400.86 712.38 400.86 735.5z'/%3E%3C/g%3E%3Cg stroke='url(%23b)' stroke-width='4'%3E%3Cpath transform='translate(0 0)' d='M149.8 345.2 118.4 389.8 149.8 434.4 181.2 389.8z'/%3E%3Crect stroke-width='8' transform='rotate(0 1089 759)' x='1039' y='709' width='100' height='100'/%3E%3Cpath transform='rotate(0 1400 132)' d='M1426.8 132.4 1405.7 168.8 1363.7 168.8 1342.7 132.4 1363.7 96 1405.7 96z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+background-attachment: fixed;
+background-size: cover;
+font-family:  sans-serif;
 
-  .input {
-    width: calc(300px - 20px); /* Considerar el padding para mantener el ancho adecuado */
-    margin-bottom: 50px;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease; /* Agregar transición para el cambio de color del borde */
+}
+.form {
+  --input-focus: #2d8cf0;
+  --font-color: black;
+  --bg-color: #fff;
+  --main-color: #e9e9e9;
+  padding: 20px;
+  background: rgba(211, 211, 211, 0.032);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  border-radius: 10px; /* Aumentado el radio del borde */
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
+  max-width: 400px; /* Establecido un ancho máximo */
+  margin: auto; /* Centrado horizontalmente */
+  margin-top: 50px; /* Ajuste de margen superior */
+  text-align: center;
+}
+
+.title {
+  color: black;
+  font-weight: 650;
+  font-size: 20px;
+  margin-bottom: 25px;
+}
+
+.title span {
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+  font-size: 17px;
+  text-align: center;
+}
+
+.input {
+  width: 100%; /* Ancho al 100% del contenedor */
+  height: 40px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 5px 10px;
+  outline: none;
   
-  }
-  
-  .input[type="text"]:focus,
-  .input[type="password"]:focus {
-   
-    border-color: #00a2ff; /* Cambiar el color del borde al enfocar el campo */
-  }
-  
-  /* Estilos para el botón */
-  #btn1 {
-    width: 280px;
-    padding: 10px;
-    border-radius: 4px;
-    border: none;                 
-    background-color:  #00a2ff;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* Agregar transición al color de fondo */
-    border-radius: 6px;
-    
-  }
-  
-  #btn1:hover {
-    background-color:  #005bbd;
-  }
-  
-  
-  /* Estilos para el título "Login" */
-  #h1 {
-    text-align: left; /* Centrar el texto */
-    margin-bottom: 20px; /* Espacio hacia abajo después del título */
-    color: #333; /* Color del texto */
-  }
+}
+
+.input::placeholder {
+  color: rgba(0, 0, 0, 0.411);
+}
+
+.input:focus {
+  border: 2px solid var(--input-focus);
+}
+
+.login-with {
+  display: flex;
+  gap: 20px;
+}
+
+.button-log {
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 4px 4px var(--main-color);
+  color: var(--font-color);
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.button-log:active, .button-confirm:active {
+  box-shadow: 0px 0px var(--main-color);
+  transform: translate(3px, 3px);
+}
+
+.button-confirm, .button-register{
+  width: 200px; /* Ancho al 100% del contenedor */
+  height: 40px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 4px 4px var(--main-color);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--font-color);
+  cursor: pointer;
+  color: #323232;
+}
   
   
 

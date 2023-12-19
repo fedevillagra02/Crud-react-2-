@@ -169,6 +169,8 @@ app.post("/register", async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
   const password = req.body.password;
+ 
+
 
   // Verificar si el usuario o el correo ya existen en la base de datos
   db.query("SELECT * FROM registro WHERE username = ? OR email = ?", [username, email], (err, result) => {

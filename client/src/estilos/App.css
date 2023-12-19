@@ -1,4 +1,9 @@
+body{
+  background-color: white;
+  font-family:  sans-serif;
 
+
+}
 .App {
   display :flex;
   flex-direction:column;

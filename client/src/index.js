@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Inicio from './Inicio';
 
-
+//ruta donde inicia el proyecto
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   
