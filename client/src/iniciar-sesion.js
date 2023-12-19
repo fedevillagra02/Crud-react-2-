@@ -16,6 +16,7 @@ export default function IniciarSesion() {
   };
 
   const iniciarSesion = () => {
+
     Axios.post("http://localhost:3001/login", {
       email: email,
       password: password,

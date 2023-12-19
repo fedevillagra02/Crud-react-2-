@@ -19,48 +19,53 @@ function App() {
   const[id,setid]=useState();
 
 const [empleadosList,setEmpleados]= useState([]);
-const token = localStorage.getItem('token');
-
+const token = localStorage.getItem('token'); //traigo el token desde el local storage 
+const validate=()=>{
+    // Verificar si los campos obligatorios están completos
+    if (!nombre || !edad || !pais || !cargo || !anios) {
+      // Mostrar mensaje de error o manejar la falta de campos obligatorios
+      // Por ejemplo:
+      alert('Por favor, complete todos los campos obligatorios.');
+      return;
+    }
+  
+    // Validar el formato de la edad (asegurarse de que sea un número)
+    const parsedAge = parseInt(edad);
+    if (isNaN(parsedAge) || parsedAge <= 0) {
+      // Mostrar mensaje de error o manejar el formato incorrecto de la edad
+      // Por ejemplo:
+      alert('Por favor, ingrese una edad válida.');
+      return;
+    }
+  
+    // Validar el formato de 'anios' (asegurarse de que sea un número)
+    const parsedAnios = parseInt(anios);
+    if (isNaN(parsedAnios) || parsedAnios <= 0) {
+      // Mostrar mensaje de error o manejar el formato incorrecto de 'anios'
+      // Por ejemplo:
+      alert('Por favor, ingrese una cantidad válida de años.');
+      return;
+    }
+    return true;
+}
 const add = () => {
-   // Verificar si los campos obligatorios están completos
-   if (!nombre || !edad || !pais || !cargo || !anios) {
-    // Mostrar mensaje de error o manejar la falta de campos obligatorios
-    // Por ejemplo:
-    alert('Por favor, complete todos los campos obligatorios.');
-    return;
-  }
-
-  // Validar el formato de la edad (asegurarse de que sea un número)
-  const parsedAge = parseInt(edad);
-  if (isNaN(parsedAge) || parsedAge <= 0) {
-    // Mostrar mensaje de error o manejar el formato incorrecto de la edad
-    // Por ejemplo:
-    alert('Por favor, ingrese una edad válida.');
-    return;
-  }
-
-  // Validar el formato de 'anios' (asegurarse de que sea un número)
-  const parsedAnios = parseInt(anios);
-  if (isNaN(parsedAnios) || parsedAnios <= 0) {
-    // Mostrar mensaje de error o manejar el formato incorrecto de 'anios'
-    // Por ejemplo:
-    alert('Por favor, ingrese una cantidad válida de años.');
-    return;
-  }
-  Axios.post("http://localhost:3001/create", {
+   if(!validate()) return;
+  Axios.post("http://localhost:3001/create", { //realizo una solicitud post 
     nombre: nombre,
     edad: edad,
     pais: pais,
     cargo: cargo,
     anios: anios,
   },  { 
-    headers: {
-      'Authorization': `Bearer ${token}` 
+    headers: { 
+      'Authorization': `Bearer ${token}`  /* configuro el encabezado 
+                                             para que el token vaya en la cabecera de la solicitud */            
+                                                                    
     }
 }
   ).then(() => {
-    getEmpleados();
-    limpiarCampos();
+    getEmpleados(); //actualiza la lista de empleados 
+    limpiarCampos(); //limpia los campos de los inputs 
 
     Swal.fire({
       title: "<strong> Registro exitoso</strong>",
@@ -72,31 +77,8 @@ const add = () => {
 };
  
   const update = ()=>{
-     // Verificar si los campos obligatorios están completos
-  if (!nombre || !edad || !pais || !cargo || !anios) {
-    // Mostrar mensaje de error o manejar la falta de campos obligatorios
-    // Por ejemplo:
-    alert('Por favor, complete todos los campos obligatorios.');
-    return;
-  }
+    if(!validate()) return;
 
-  // Validar el formato de la edad (asegurarse de que sea un número)
-  const parsedAge = parseInt(edad);
-  if (isNaN(parsedAge) || parsedAge <= 0) {
-    // Mostrar mensaje de error o manejar el formato incorrecto de la edad
-    // Por ejemplo:
-    alert('Por favor, ingrese una edad válida.');
-    return;
-  }
-
-  // Validar el formato de 'anios' (asegurarse de que sea un número)
-  const parsedAnios = parseInt(anios);
-  if (isNaN(parsedAnios) || parsedAnios <= 0) {
-    // Mostrar mensaje de error o manejar el formato incorrecto de 'anios'
-    // Por ejemplo:
-    alert('Por favor, ingrese una cantidad válida de años.');
-    return;
-  }
     Axios.put("http://localhost:3001/update",{
     id:id,  
     nombre:nombre,
@@ -120,7 +102,7 @@ const add = () => {
       })
     });
 
-  }
+  };
   
 
   const deleteEmple = (val) => {
@@ -198,125 +180,142 @@ setid(val.id);
 
 }
 
-  return (
-    <div className="container">
-
+return (
+  <div className="container">
+  <div className="card text-center">
+    {/* Encabezado de la tarjeta */}
+    <div className="card-header">
+      Gestión de empleados
+    </div>
+    {/* Cuerpo de la tarjeta */}
+<div className="card-body">
+ {/* Formulario */}
+ <div className="input-group mb-3">
+ <span className="input-group-text" id="basic-addon1">Nombre:</span>
+ <input type="text" 
+ onChange={(event)=>{setnombre(event.target.value);}}
+className="form-control" 
+value={nombre}    
+ placeholder="Ingrese un nombre" 
+ aria-label="Username" 
+ aria-describedby="basic-addon1"/>
+ </div>
     
-          <div className="card text-center">
-        <div className="card-header">
-          Gestion de empleados
-        </div>
-        <div className="card-body">
-        <div className="input-group mb-3">
-        <span className="input-group-text" id="basic-addon1">Nombre:</span>
-        <input type="text" 
-        onChange={(event)=>{setnombre(event.target.value);
-        }
-        }
-        className="form-control" value={nombre}     placeholder="Ingrese un nombre" aria-label="Username" aria-describedby="basic-addon1"/>
-     </div>
-    
-      <div className="input-group mb-3">
-  <span className="input-group-text" id="basic-addon1">Edad</span>
-  <input type="text" 
-  onChange={(event)=>{setedad(event.target.value);
-  }
-  }
-  className="form-control" value={edad}    placeholder="Ingrese una edad" aria-label="Username" aria-describedby="basic-addon1"/>
+ <div className="input-group mb-3">
+ <span className="input-group-text" id="basic-addon1">Edad</span>
+<input type="text" 
+ onChange={(event)=>{setedad(event.target.value);}}
+  className="form-control" 
+  value={edad}    
+  placeholder="Ingrese una edad" 
+  aria-label="Username" 
+  aria-describedby="basic-addon1"/>
 </div>
 
 <div className="input-group mb-3">
   <span className="input-group-text" id="basic-addon1">Pais</span>
   <input type="text" 
-  onChange={(event)=>{setpais(event.target.value);
-  }
-  }
-  className="form-control"  value={pais}   placeholder="Ingrese un Pais " aria-label="Username" aria-describedby="basic-addon1"/>
+  onChange={(event)=>{setpais(event.target.value);}}
+  className="form-control" 
+   value={pais}   
+   placeholder="Ingrese un Pais " 
+   aria-label="Username" 
+   aria-describedby="basic-addon1"/>
 </div>
 
 <div className="input-group mb-3">
   <span className="input-group-text" id="basic-addon1">Cargo</span>
   <input type="text" 
-  onChange={(event)=>{setcargo(event.target.value);
-  }
-  }
-  className="form-control" value={cargo}   placeholder="Ingrese un Cargo " aria-label="Username" aria-describedby="basic-addon1"/>
+  onChange={(event)=>{setcargo(event.target.value);}}
+  className="form-control" 
+  value={cargo}  
+   placeholder="Ingrese un Cargo " 
+   aria-label="Username" 
+   aria-describedby="basic-addon1"/>
 </div>
 
 <div className="input-group mb-3">
   <span className="input-group-text" id="basic-addon1">Años en la empresa</span>
   <input type="text" 
-  onChange={(event)=>{setanios(event.target.value);
-  }
-  }
-  className="form-control" value={anios} placeholder="Ingrese la cantidad de años " aria-label="Username" aria-describedby="basic-addon1"/>
+  onChange={(event)=>{setanios(event.target.value); }}
+  className="form-control" 
+  value={anios}
+   placeholder="Ingrese la cantidad de años " 
+   aria-label="Username" 
+   aria-describedby="basic-addon1"/>
 </div>    
         </div>
-        <div className="card-footer text-muted">
-          {
-            editar?
-            <div>
-            <button className='btn btn-warning'  id='btn'  onClick={update}>Actualizar</button> 
-            <button className='btn btn-info'  id='btn'  onClick={limpiarCampos}>Cancelar</button>
-            </div>
-                 :
-                 <button className='btn btn-success'  id='btn'  onClick={add}>Registrar</button>
+        {/* Pie de la tarjeta */}
+      <div className="card-footer text-muted">
+        {/* Botones de acciones */}
+        {editar ? (
+          <div>
+            <button className='btn btn-warning' id='btn' onClick={update}>Actualizar</button>
+            <button className='btn btn-info' id='btn' onClick={limpiarCampos}>Cancelar</button>
+          </div>
+        ) : (
+          <button className='btn btn-success' id='btn' onClick={add}>Registrar</button>
+        )}
 
-          }
-        <button className='btn btn-success'  id='btn'  onClick={getEmpleados}>Mostrar registros</button>
-        </div>
+        {/* Botón para mostrar registros */}
+        <button className='btn btn-success' id='btn' onClick={getEmpleados}>Mostrar registros</button>
       </div>
+    </div>
+
 
       <table className="table table-striped">
       <thead>
-    <tr>
-      <th scope="col">Id</th>
-      <th scope="col">Nombre</th>
-      <th scope="col">Edad</th>
-      <th scope="col">Pais</th>
-      <th scope="col">Cargo</th>
-      <th scope="col">Experiencia</th>
-      <th scope="col">Acciones</th>
-    </tr>
-  </thead>
-  <tbody>{
-  empleadosList.map((val,key)=>{
-    return <tr key={val.id}>
-      <th >{val.id}</th>
-      <td>{val.nombre}</td>
-      <td>{val.edad}</td>
-      <td>{val.pais}</td>
-      <td>{val.cargo}</td>
-      <td>{val.anios}</td> 
-      <td>
-      <div className="btn-group" role="group" aria-label="Basic example">
-      <button type="button" 
-      onClick={()=>{
-        editarEmpleado(val);
-         } 
-      }
-      className="btn btn-info">Editar</button>
-      <button type="button"
-      onClick={()=>{
-        deleteEmple(val);
-      }}
-      
-      className="btn btn-danger">Eliminar</button>
-      
-</div>
-        </td> 
+        {/* Encabezados de la tabla */}
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Edad</th>
+          <th scope="col">Pais</th>
+          <th scope="col">Cargo</th>
+          <th scope="col">Experiencia</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
 
-    </tr>
-  
-  })
-}
-
-  </tbody>
-</table>
-
-    </div>
+      {/* Cuerpo de la tabla */}
+      <tbody>
+        {/* Filas de datos */}
+        {empleadosList.map((val, key) => {
+          return (
+            <tr key={val.id}>
+              <th>{val.id}</th>
+              <td>{val.nombre}</td>
+              <td>{val.edad}</td>
+              <td>{val.pais}</td>
+              <td>{val.cargo}</td>
+              <td>{val.anios}</td>
+              <td>
+                {/* Botones de acciones por registro */}
+                <div className="btn-group" role="group" aria-label="Basic example">
+                  <button
+                    type="button"
+                    onClick={() => { editarEmpleado(val); }}
+                    className="btn btn-info"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { deleteEmple(val); }}
+                    className="btn btn-danger"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
 
   );
-}
+};
 
 export default App;

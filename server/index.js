@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 app.use(cors());
 app.use(express.json());
 
-const db=mysql.createConnection({
+const db=mysql.createConnection({ //creo la conexion con mi db 
     host:"localhost",
     user:"root",
     password:"",
@@ -17,8 +17,8 @@ const db=mysql.createConnection({
 });
 
 
-app.post("/create", (req, res) => {
-    const token = req.headers.authorization.split(' ')[1];
+app.post("/create", (req, res) => { //consulta para el registro de empleados  
+    const token = req.headers.authorization.split(' ')[1]; //const que recibe el token y me lo devuelve 
     const nombre = req.body.nombre;
     const edad = req.body.edad;
     const pais = req.body.pais;
@@ -211,40 +211,34 @@ app.post("/register", async (req, res) => {
   });
 });
 
-app.post("/login", (req, res) => {
-    const email= req.body.email; //datos que recibo desde el front
-    const password = req.body.password;
- 
-    db.query("SELECT * FROM registro WHERE email = ? ",[email],
-async(err,result)=>{
-    if(err){
-        console.log(err);
-    }else{
-        if(result.length>0 ){
-            const datos=result[0]
-            const hashedPassword=datos.password;
-            const esigual= await bcrypt.compare(password,hashedPassword);
-            if(esigual){
-                const token=generarToken(datos);
-                console.log("Credenciales correctos",token);
-                res.send({message:"Inicio exitoso",token,datos: JSON.stringify(datos)});
-            }else{
-                console.log("Credenciales incorrectos ");
-                res.send({message:"contraseña incorrecta"});
-            }
-        }else{
-            res.send({ message: "usuario no existe"});
-          console.log("usuario no encontrado");
+app.post("/login", async (req, res) => {
+  const email = req.body.email; // Datos recibidos desde el front
+  const password = req.body.password;
 
+  db.query("SELECT * FROM registro WHERE email = ?", [email], async (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      if (result.length > 0) {
+        const datos = result[0];
+        const hashedPassword = datos.password;
+        const esIgual = await bcrypt.compare(password, hashedPassword);
+
+        if (esIgual) {
+          const token = generarToken(datos);
+          console.log("Credenciales correctos", token);
+          res.send({ message: "Inicio exitoso", token, datos: JSON.stringify(datos) });
+        } else {
+          console.log("Credenciales incorrectos ");
+          res.send({ message: "Contraseña incorrecta" });
         }
+      } else {
+        res.send({ message: "Usuario no existe" });
+        console.log("Usuario no encontrado");
+      }
     }
-}
-    )
-
-
-
-} 
-  );
+  });
+});
 
 
 
