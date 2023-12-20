@@ -11,10 +11,10 @@ function Inicio() {
       <BrowserRouter>
         <Routes>
         <Route path='/' element={< Main />} />
-
           <Route path='/iniciar-sesion' element={<IniciarSesion />} />
           <Route path='/registro' element={<Registro />} />
           <Route path='/App' element={<App />} />
+
          
         </Routes>
       </BrowserRouter>

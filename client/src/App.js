@@ -4,7 +4,8 @@ import{useState} from "react";
 import Axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from 'sweetalert2'
-
+import React  from 'react';
+import {useNavigate } from 'react-router-dom';
 
 
 
@@ -20,6 +21,8 @@ function App() {
 
 const [empleadosList,setEmpleados]= useState([]);
 const token = localStorage.getItem('token'); //traigo el token desde el local storage 
+const navigate = useNavigate();
+
 const validate=()=>{
     // Verificar si los campos obligatorios están completos
     if (!nombre || !edad || !pais || !cargo || !anios) {
@@ -51,7 +54,7 @@ const validate=()=>{
 const add = () => {
    if(!validate()) return;
   Axios.post("http://localhost:3001/create", { //realizo una solicitud post 
-    nombre: nombre,
+    nombre: nombre, //Indico que nombre es representado por la constante nombre 
     edad: edad,
     pais: pais,
     cargo: cargo,
@@ -167,7 +170,11 @@ seteditar(false);
   }
 
 
- 
+  const cerrarSesion = () => {
+    localStorage.removeItem('token'); //remover el token de localStorage
+    navigate(`/`); //dirigirlo a la pagina main
+  }
+
 const editarEmpleado = (val)=>{
 seteditar(true);
 
@@ -178,9 +185,22 @@ setpais(val.pais);
 setanios(val.anios);
 setid(val.id);
 
+
 }
 
 return (
+  <div>
+      <nav className="navbar">
+        <div className="container1">
+        <button className='btn btn-danger' id='btn' onClick={cerrarSesion}>Cerrar sesion
+        </button>   
+          
+        </div>
+      </nav>
+    
+
+  
+
   <div className="container">
   <div className="card text-center">
     {/* Encabezado de la tarjeta */}
@@ -313,6 +333,7 @@ value={nombre}
         })}
       </tbody>
     </table>
+  </div>
   </div>
 
   );
